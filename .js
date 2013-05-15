@@ -27,3 +27,39 @@ build = function(callback) {
 task('build', 'Build lib/ from src/', function() {
   return build();
 });
+
+task('watch', 'Watch src/ for changes', function() {
+  var coffee;
+
+  coffee = exec('coffee -w -c -o lib src');
+  coffee.stderr.on('data', function(data) {
+    return process.stderr.write(data.toString());
+  });
+  return coffee.stdout.on('data', function(data) {
+    return print(data.toString());
+  });
+});
+
+task('open', 'Open index.html', function() {
+  exec('open index.html');
+  return invoke('watch');
+});
+
+option('-o', '--output [DIR]', 'output dir');
+
+task('build2', 'Build lib/ from src/', function() {
+  var coffee;
+
+  coffee = exec("coffee -c -o " + (option.output || 'lib') + " src");
+  coffee.stderr.on('data', function(data) {
+    return process.stderr.write(data.toString());
+  });
+  coffee.stdout.on('data', function(data) {
+    return print(data.toString());
+  });
+  return coffee.on('exit', function(code) {
+    if (code === 0) {
+      return typeof callback === "function" ? callback() : void 0;
+    }
+  });
+});

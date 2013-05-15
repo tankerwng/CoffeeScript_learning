@@ -28,7 +28,3 @@ console.log("Animal is a #{animal.name}")
 parrot = new Parrot "Macaw"
 
 console.log("This parrot is no more") if parrot.rip
-
-string = "migrating coconuts"
-string == string
-string is string
